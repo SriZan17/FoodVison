@@ -8,11 +8,13 @@ from going_modular import data_setup
 from going_modular import engine
 from going_modular.helper_functions import plot_loss_curves
 from going_modular.helper_functions import create_writer
+from going_modular.utils import save_model
 
 
 def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     num_epochs = 10
+    batch_size = 1024
 
     # 1. Get pretrained weights for ViT-Base
     pretrained_vit_weights = (
@@ -49,7 +51,7 @@ def main():
         train_dir=train_dir,
         test_dir=test_dir,
         transform=pretrained_vit_transforms,
-        batch_size=32,
+        batch_size=batch_size,
     )
 
     # 4. Change the classifier head (set the seeds to ensure same initialization with linear head)
@@ -81,6 +83,11 @@ def main():
         writer=writer,
     )
     plot_loss_curves(pretrained_vit_results)
+    save_model(
+        model=pretrained_vit,
+        target_dir="models",
+        model_name="08_pretrained_vit_feature_extractor_pizza_steak_sushi.pth",
+    )
 
 
 if __name__ == "__main__":

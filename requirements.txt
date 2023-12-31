@@ -1,0 +1,11 @@
+gradio==4.12.0
+matplotlib==3.7.2
+mlxtend==0.23.0
+numpy==1.25.2
+Pillow==10.1.0
+Requests==2.31.0
+torch
+torchinfo==1.8.0
+torchmetrics==1.2.0
+torchvision
+tqdm==4.65.0
