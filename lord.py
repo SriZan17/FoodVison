@@ -1,13 +1,14 @@
-import matplotlib.pyplot as plt
 import torch
 import torchvision
 from torch import nn
-
-# from torchinfo import summary
+from pathlib import Path
 from going_modular import data_setup
 from going_modular import utils
 from going_modular import engine
 from going_modular import helper_functions
+import json
+
+# from torchinfo import summary
 
 
 def main():
@@ -23,7 +24,6 @@ def main():
     # Setup directory paths to train and test images
     train_dir = data_20_percent_path / "train"
     test_dir = data_20_percent_path / "test"
-    print(DEVICE)
     effnetb2, effnetb2_transforms = create_effnetb2_model(num_classes=3, seed=43)
     (
         train_dataloader_effnetb2,
@@ -33,7 +33,7 @@ def main():
         train_dir=train_dir,
         test_dir=test_dir,
         transform=effnetb2_transforms,
-        batch_size=32,
+        batch_size=1024,
     )
     # Setup optimizer
 
@@ -51,7 +51,7 @@ def main():
     # Set seeds for reproducibility and train the model
     helper_functions.set_seeds()
     effnetb2_results = engine.train(
-        model=effnetb2,
+        model=effnetb2.to(DEVICE),
         train_dataloader=train_dataloader_effnetb2,
         test_dataloader=test_dataloader_effnetb2,
         epochs=EPOCHS,
@@ -64,6 +64,26 @@ def main():
     utils.save_model(
         model=effnetb2, model_name="effnetb2" + ".pth", target_dir="models"
     )
+    # Count number of parameters in EffNetB2
+    effnetb2_total_params = sum(torch.numel(param) for param in effnetb2.parameters())
+    # Get the model size in bytes then convert to megabytes
+    pretrained_effnetb2_model_size = Path("models/effnetb2.pth").stat().st_size // (
+        1024 * 1024
+    )  # division converts bytes to megabytes (roughly)
+    print(
+        f"Pretrained EffNetB2 feature extractor model size: {pretrained_effnetb2_model_size} MB"
+    )
+    # Create a dictionary with EffNetB2 statistics
+    effnetb2_stats = {
+        "test_loss": effnetb2_results["test_loss"][-1],
+        "test_acc": effnetb2_results["test_acc"][-1],
+        "number_of_parameters": effnetb2_total_params,
+        "model_size (MB)": pretrained_effnetb2_model_size,
+    }
+    # Save the dictionary as a JSON file
+    with open("effnetb2_stats.json", "w") as json_file:
+        json.dump(effnetb2_stats, json_file)
+
     helper_functions.plot_loss_curves(effnetb2_results)
 
 
