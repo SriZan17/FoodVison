@@ -190,6 +190,8 @@ def main():
         device=device,
     )
     plot_loss_curves(results)
+    # save model
+    torch.save(vit.state_dict(), "models/vit.pth")
 
 
 # # Print an input and output summary of our Transformer Encoder (uncomment for full output)

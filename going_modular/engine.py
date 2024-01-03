@@ -71,7 +71,7 @@ def train_step(
 
 def test_step(
     model: torch.nn.Module,
-    dataloader: torch.utils.data.DataLoader,
+    dataloader,
     loss_fn: torch.nn.Module,
     device: torch.device,
 ) -> Tuple[float, float]:
@@ -125,13 +125,13 @@ def test_step(
 # Add writer parameter to train()
 def train(
     model: torch.nn.Module,
-    train_dataloader: torch.utils.data.DataLoader,
-    test_dataloader: torch.utils.data.DataLoader,
+    train_dataloader,
+    test_dataloader,
     optimizer: torch.optim.Optimizer,
     loss_fn: torch.nn.Module,
     epochs: int,
     device: torch.device,
-    writer: torch.utils.tensorboard.writer.SummaryWriter,  # new parameter to take in a writer
+    writer,  # new parameter to take in a writer
 ) -> Dict[str, List]:
     """Trains and tests a PyTorch model.
 
@@ -220,4 +220,5 @@ def train(
     # End new ###
 
     # Return the filled results at the end of the epochs
+    # save the model
     return results
