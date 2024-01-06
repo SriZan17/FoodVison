@@ -1,1 +1,7 @@
-{"test_loss": 0.3167259097099304, "test_acc": 0.9466666666666667, "number_of_parameters": 85800963, "model_size (MB)": 327}
+{
+    "test_loss": 0.3167259097099304,
+    "test_acc": 0.9466666666666667,
+    "number_of_parameters": 85800963,
+    "model_size (MB)": 327,
+    "time_per_pred_cpu": 0.2591
+}

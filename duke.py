@@ -44,7 +44,7 @@ def main():
     # Setup the PyTorch TensorBoard logger
     writer = helper_functions.create_writer(
         experiment_name="20%-data-10-epochs",
-        model_name="effnetb2",
+        model_name="vit",
         extra=f"{EPOCHS}_epochs",
     )
 
